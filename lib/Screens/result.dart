@@ -3,40 +3,41 @@ import 'package:gstcalculator/Theme/AppColor.dart';
 import 'package:gstcalculator/Theme/AppTheme.dart';
 
 class ResultPage extends StatefulWidget {
- double amount;
+  double amount;
   double gstRate;
-  String getType;
-  ResultPage({this.amount,this.gstRate,this.getType});
+  String gstType;
+  double discount;
+  ResultPage({this.amount, this.gstRate, this.gstType, this.discount});
   @override
   _ResultPageState createState() => _ResultPageState();
 }
 
 class _ResultPageState extends State<ResultPage> {
-  double netPrice=0;
-  double totalGst=0;
-  double totalAmount=0;
- @override
+  double netPrice = 0;
+  double totalGst = 0;
+  double totalAmount = 0;
+  @override
   void initState() {
     setState(() {
-      if(widget.getType=="in"){
-         totalGst =(widget.amount*widget.gstRate)/(widget.gstRate+100);
-         netPrice= widget.amount- totalGst;
-        totalAmount=widget.amount;
-       
-      }else{
-        totalGst = (widget.amount*widget.gstRate)/100;
-        netPrice=widget.amount;
-        totalAmount = widget.amount+totalGst;
+      if (widget.gstType == "in") {
+        totalGst = (widget.amount  * widget.gstRate) / (widget.gstRate + 100);
+        netPrice = widget.amount - totalGst;
+        totalAmount = widget.amount;
+      } else {
+        totalGst = (widget.amount * widget.gstRate) / 100;
+        netPrice = widget.amount;
+        totalAmount = widget.amount + totalGst;
       } 
     });
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: (){
-          FocusScope.of(context).requestFocus(FocusNode());
-        },
+      onTap: () {
+        FocusScope.of(context).requestFocus(FocusNode());
+      },
       child: Scaffold(
         appBar: AppBar(
           iconTheme: IconThemeData(color: AppColor.fontColor),
@@ -82,16 +83,16 @@ class _ResultPageState extends State<ResultPage> {
                     Text(
                       "Net amount",
                       style: AppTheme.mediamTextStyle(
-                        color: AppColor.fontColor,
-                        appSize: MediaQuery.of(context).size,fontWeight: FontWeight.bold
-                      ),
+                          color: AppColor.fontColor,
+                          appSize: MediaQuery.of(context).size,
+                          fontWeight: FontWeight.bold),
                     ),
                     Text(
                       "${netPrice.toStringAsFixed(2)}",
                       style: AppTheme.mediamTextStyle(
-                        color: AppColor.fontColor,
-                        appSize: MediaQuery.of(context).size,fontWeight: FontWeight.bold
-                      ),
+                          color: AppColor.fontColor,
+                          appSize: MediaQuery.of(context).size,
+                          fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),
@@ -107,7 +108,7 @@ class _ResultPageState extends State<ResultPage> {
                       ),
                     ),
                     Text(
-                      "${(totalGst/2).toStringAsFixed(2)}",
+                      "${(totalGst / 2).toStringAsFixed(2)}",
                       style: AppTheme.mediamTextStyle(
                         color: AppColor.fontColor,
                         appSize: MediaQuery.of(context).size,
@@ -126,7 +127,7 @@ class _ResultPageState extends State<ResultPage> {
                       ),
                     ),
                     Text(
-                      "${(totalGst/2).toStringAsFixed(2)}",
+                      "${(totalGst / 2).toStringAsFixed(2)}",
                       style: AppTheme.mediamTextStyle(
                         color: AppColor.fontColor,
                         appSize: MediaQuery.of(context).size,

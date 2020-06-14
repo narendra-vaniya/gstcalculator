@@ -13,15 +13,16 @@ class _DashBoardState extends State<DashBoard> {
   final _formkey = GlobalKey<FormState>();
   TextEditingController _quantity = TextEditingController();
   TextEditingController _price = TextEditingController();
+  TextEditingController _discount = TextEditingController();
 
   var _gstRate;
   var _gstType;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-       onTap: (){
-          FocusScope.of(context).requestFocus(FocusNode());
-        },
+      onTap: () {
+        FocusScope.of(context).requestFocus(FocusNode());
+      },
       child: Scaffold(
         bottomNavigationBar: FloatingActionButton(
           backgroundColor: AppColor.primaryColor,
@@ -35,21 +36,33 @@ class _DashBoardState extends State<DashBoard> {
           onPressed: () {
             if (_quantity.text.isNotEmpty) {
               if (_price.text.isNotEmpty) {
-                if (_gstRate != null) {
-                  if (_gstType != null) {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ResultPage(getType: "$_gstType",
-                          amount: double.parse(_price.text)*double.parse(_quantity.text),gstRate: double.parse(_gstRate),
+                if (_discount.text.isNotEmpty) {
+                  if (_gstRate != null) {
+                    if (_gstType != null) {
+                      double price = (double.parse(_price.text) * double.parse(_quantity.text));
+                      double discount = (price * double.parse(_discount.text))/100;
+                   
+                      
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ResultPage(
+                            discount: discount,
+                            gstType: "$_gstType",
+                            amount:  (price - discount) ,
+                            gstRate: double.parse(_gstRate),
+                            
+                          ),
                         ),
-                      ),
-                    );
+                      );
+                    } else {
+                      Toast.show("Select GST Type", context);
+                    }
                   } else {
-                    Toast.show("Select GST Type", context);
+                    Toast.show("Select GST Rate%", context);
                   }
                 } else {
-                  Toast.show("Select GST Rate%", context);
+                  Toast.show("Enter Discount", context);
                 }
               } else {
                 Toast.show("Enter GST Price", context);
@@ -128,6 +141,29 @@ class _DashBoardState extends State<DashBoard> {
                         ),
                       ),
 
+                      //!Discount
+                      Container(
+                        padding: EdgeInsets.all(10),
+                        child: TextFormField(
+                          controller: _discount,
+                          keyboardType: TextInputType.number,
+                          textInputAction: TextInputAction.next,
+                          onFieldSubmitted: (data) {
+                            FocusScope.of(context).nextFocus();
+                          },
+                          style: AppTheme.smallTextStyle(
+                              appSize: MediaQuery.of(context).size,
+                              color: Colors.black),
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.all(0),
+                            hintText: 'Discount',
+                            hintStyle: AppTheme.smallTextStyle(
+                                appSize: MediaQuery.of(context).size,
+                                color: Colors.grey),
+                          ),
+                        ),
+                      ),
+
                       //!GST rate
                       Container(
                         padding: EdgeInsets.all(10),
@@ -152,11 +188,11 @@ class _DashBoardState extends State<DashBoard> {
                             );
                           }).toList(),
                           onChanged: (value) {
-                            
                             setState(() {
                               _gstRate = value;
                             });
-                            FocusScope.of(context).requestFocus(new FocusNode());
+                            FocusScope.of(context)
+                                .requestFocus(new FocusNode());
                           },
                         ),
                       ),
@@ -197,7 +233,8 @@ class _DashBoardState extends State<DashBoard> {
                             setState(() {
                               _gstType = value;
                             });
-                            FocusScope.of(context).requestFocus(new FocusNode());
+                            FocusScope.of(context)
+                                .requestFocus(new FocusNode());
                           },
                         ),
                       ),
